@@ -58,12 +58,6 @@
 
 Endpoint data utama membutuhkan header `X-API-Key`. Daftar gratis di [https://api.ahmadsanusi.com/register](https://api.ahmadsanusi.com/register) atau via API `POST /v1/auth/register` untuk langsung mendapatkan API Key.
 
-| Tier | Kuota Harian | Keterangan |
-| :--- | :--- | :--- |
-| **Free** | `300` requests / hari | Gratis untuk proyek personal & belajar |
-| **Pro** | `10.000` requests / hari | Untuk aplikasi produksi dengan traffic lebih tinggi |
-| **Admin** | Unlimited | Akses penuh |
-
 > **Catatan:** Endpoint **Kalkulator Zakat** (`/v1/zakat/*`) dan **Kalkulator Waris** (`/v1/waris/*`) bersifat **publik** (tanpa `X-API-Key`) dengan pembatasan rate limit berbasis IP.
 
 ---
