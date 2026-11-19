@@ -5,13 +5,17 @@
 [![Database](https://img.shields.io/badge/MariaDB%20%2F%20MySQL-8.0%2B-003545?style=flat-square&logo=mariadb&logoColor=white)](https://mariadb.org/)
 [![API Docs](https://img.shields.io/badge/Swagger-Docs-10b981?style=flat-square&logo=swagger&logoColor=white)](https://api.ahmadsanusi.com/docs)
 
-**Ahmad Sanusi Open API** adalah layanan **REST API Islami gratis** untuk developer aplikasi Muslim di Indonesia. Menyediakan data terstruktur untuk **Al-Qur'an 30 Juz**, **Hadits (10 Kitab)**, **Jadwal Sholat Kemenag RI & Arah Kiblat**, **Doa & Dzikir**, **Kitab Kuning**, **Fatwa DSN-MUI**, **E-Code Halal**, **Direktori Pesantren**, serta **Kalkulator Zakat & Waris (Faraidh)**.
+**Ahmad Sanusi Open API** adalah layanan **REST API Islami gratis** untuk developer aplikasi Muslim di Indonesia. Menyediakan data terstruktur untuk **Al-Qur'an 30 Juz**, **Hadits (10 Kitab)**, **Jadwal Sholat Kemenag RI & Arah Kiblat**, **Doa & Dzikir**, **Kitab Kuning**, **Fatwa DSN-MUI**, **Cek Produk Halal (BPJPH & HalalMUI)**, **Izin Edar BPOM RI**, **Scan Barcode Produk**, **E-Code Halal**, **Direktori Pesantren**, serta **Kalkulator Zakat & Waris (Faraidh)**.
 
 - **Portal & Demo**: [https://api.ahmadsanusi.com](https://api.ahmadsanusi.com)
 - **Dokumentasi Swagger**: [https://api.ahmadsanusi.com/docs](https://api.ahmadsanusi.com/docs)
 - **ReDoc**: [https://api.ahmadsanusi.com/redoc](https://api.ahmadsanusi.com/redoc)
+- **OpenAPI JSON**: [https://api.ahmadsanusi.com/openapi.json](https://api.ahmadsanusi.com/openapi.json)
+- **Demo Cek Halal & Barcode**: [https://api.ahmadsanusi.com/cek-halal](https://api.ahmadsanusi.com/cek-halal)
 - **Demo Kalkulator Zakat**: [https://api.ahmadsanusi.com/kalkulator-zakat](https://api.ahmadsanusi.com/kalkulator-zakat)
 - **Demo Kalkulator Waris**: [https://api.ahmadsanusi.com/kalkulator-waris](https://api.ahmadsanusi.com/kalkulator-waris)
+- **Sumber Data & Lisensi**: [https://api.ahmadsanusi.com/sources](https://api.ahmadsanusi.com/sources)
+- **Changelog & Versi**: [https://api.ahmadsanusi.com/changelog](https://api.ahmadsanusi.com/changelog)
 
 ---
 
@@ -47,6 +51,7 @@
 | **Doa & Dzikir** | `/v1/doa` | 298 Doa & Dzikir (5 Kategori) + Arab, Latin, Terjemah, Fawaid | `X-API-Key` |
 | **Kitab Kuning** | `/v1/kitab` | 21 Kitab Klasik Pesantren + Bab & Pencarian | `X-API-Key` |
 | **Fatwa DSN-MUI** | `/v1/fatwa` | 166 Fatwa Ekonomi Syariah No. 1–166 (2000–2026) | `X-API-Key` |
+| **Produk Halal, BPOM & Barcode** | `/v1/halal` | Pencarian Halal (BPJPH + HalalMUI), Izin Edar BPOM RI, & Resolusi Barcode (Open Food Facts) | `X-API-Key` |
 | **E-Code Halal** | `/v1/ecode` | 561 Kode Bahan Tambahan Pangan (Halal, Meragukan, Haram) | `X-API-Key` |
 | **Direktori Pesantren** | `/v1/pesantren` | 27.722 Pondok Pesantren seluruh Indonesia | `X-API-Key` |
 | **Kalkulator Zakat** | `/v1/zakat` | 13 Jenis Zakat (NU Care / Mazhab Syafi'i) | **Publik** |
@@ -57,6 +62,11 @@
 ## Autentikasi & Rate Limit
 
 Endpoint data utama membutuhkan header `X-API-Key`. Daftar gratis di [https://api.ahmadsanusi.com/register](https://api.ahmadsanusi.com/register) atau via API `POST /v1/auth/register` untuk langsung mendapatkan API Key.
+
+| Tier | Kuota Harian | Keterangan |
+| :--- | :--- | :--- |
+| **Free** | `300` requests / hari | Gratis untuk proyek personal & belajar |
+| **Pro** | `10.000` requests / hari | Untuk aplikasi produksi dengan traffic lebih tinggi |
 
 > **Catatan:** Endpoint **Kalkulator Zakat** (`/v1/zakat/*`) dan **Kalkulator Waris** (`/v1/waris/*`) bersifat **publik** (tanpa `X-API-Key`) dengan pembatasan rate limit berbasis IP.
 
@@ -149,7 +159,14 @@ Semua respons mengikuti format JSON standar:
 - `GET /v1/fatwa/search?q=` — Cari judul, isi, atau referensi
 - `GET /v1/fatwa/{nomor}` — Detail fatwa berdasarkan nomor (1–166)
 
-### 7. E-Code Halal (`/v1/ecode`)
+### 7. Produk Halal, BPOM RI & Barcode (`/v1/halal`)
+- `GET /v1/halal/search?q=&limit=` — Cari sertifikat halal (cache MariaDB + fallback BPJPH → HalalMUI)
+- `GET /v1/halal/bpom/search?q=&limit=` — Cari izin edar BPOM RI (`cekbpom.pom.go.id`)
+- `GET /v1/halal/barcode/{code}` — Resolusi barcode EAN/UPC ke nama produk & keyword (Open Food Facts)
+- `GET /v1/halal/summary` — Statistik produk halal tersimpan di cache
+- `GET /v1/halal/{cert_no}` — Detail sertifikat halal dari cache lokal
+
+### 8. E-Code Halal (`/v1/ecode`)
 - `GET /v1/ecode/summary` — Ringkasan statistik status halal
 - `GET /v1/ecode/search?q=` — Cari kode E-Code atau nama bahan
 - `GET /v1/ecode?status=&page=&limit=` — Daftar E-Code (`halal`, `doubtful`, `haram`)
@@ -177,5 +194,5 @@ Semua respons mengikuti format JSON standar:
 ## Dukungan & Kontak
 
 - **Website**: [https://ahmadsanusi.com](https://ahmadsanusi.com)
-- **Email**: [asanusi007@gmail.com](mailto:asanusi007@gmail.com)
+- **Kontak**: [https://api.ahmadsanusi.com/#kontak](https://api.ahmadsanusi.com/#kontak)
 - **Donasi Server**: [https://api.ahmadsanusi.com/#donasi](https://api.ahmadsanusi.com/#donasi)
